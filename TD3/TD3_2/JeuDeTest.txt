@@ -1,0 +1,15 @@
+J'ai testé pour ces valeurs:
+
+1)
+
+etats = [ False for _ in range(N_cell) ]
+seuils = [ 0.05 for _ in range(N_cell) ]
+poids = [ [ 0.7 for _ in range(N_cell)] for _ in range(N_cell) ]
+epsilon = 0.15
+
+2)
+
+etats = [ False for _ in range(N_cell) ]
+seuils = [ 0.0 for _ in range(N_cell) ]
+poids = [ [ 0.5 for _ in range(N_cell)] for _ in range(N_cell) ]
+epsilon = 0.1

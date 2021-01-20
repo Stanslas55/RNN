@@ -1,0 +1,157 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+N = 5 # nombre de lignes (et de colonnes) d'une forme
+
+N_cell = N*N
+
+# états des cellules du réseau (booléens)
+etats = [ False for _ in range(N_cell) ]
+
+# seuils des cellules du réseau (réels)
+seuils = [ 0.0 for _ in range(N_cell) ]
+
+# poids des connexions du réseau (réels)
+poids = [ [ 0.5 for _ in range(N_cell)] for _ in range(N_cell) ]
+
+exemple_a_reconnaitre = [ [True,  False, True,  False, True],
+                          [True,  True,  False, False, True],
+                          [False, False, True,  False, True],
+                          [True,  False, False, True,  True],
+                          [True, False, False, False, True] ]
+
+alphabet = \
+[ [ [False, True,  True,  True,  False],  # { A }
+     [True,  False, False, False, True],
+     [True,  True,  True,  True,  True],
+     [True,  False, False, False, True],
+     [True,  False, False, False, True] ],
+   [ [True,  True,  True,  True,  False],  # { B }
+     [True,  False, False, False, True],
+     [True,  True,  True,  True,  False],
+     [True,  False, False, False, True],
+     [True,  True,  True,  True,  False] ],
+   [ [False, True,  True,  True,  True],   # { C }
+     [True,  False, False, False, False],
+     [True,  False, False, False, False],
+     [True,  False, False, False, False],
+     [False, True,  True,  True,  True] ],
+   [ [True,  True,  True,  True,  False],  # { D }
+     [True,  False, False, False, True],
+     [True,  False, False, False, True],
+     [True,  False, False, False, True],
+     [True,  True,  True,  True,  False] ],
+   [ [True,  True,  True,  True,  True],   # { E }
+     [True,  False, False, False, False],
+     [True,  True,  True,  False, False],
+     [True,  False, False, False, False],
+     [True,  True,  True,  True,  True] ],
+   [ [True,  True,  True,  True,  True],   # { F }
+     [True,  False, False, False, False],
+     [True,  True,  True,  False, False],
+     [True,  False, False, False, False],
+     [True,  False, False, False, False] ],
+   [ [True,  True,  True,  True,  True],   # { G }
+     [True,  False, False, False, False],
+     [True,  False, False, False, False],
+     [True,  False, False, False, True],
+     [True,  True,  True,  True,  True] ],
+   [ [True,  False, False, False, True],   # { H }
+     [True,  False, False, False, True],
+     [True,  True,  True,  True,  True],
+     [True,  False, False, False, True],
+     [True,  False, False, False, True] ],
+   [ [False, False, True,  False, False],  # { I }
+     [False, False, True,  False, False],
+     [False, False, True,  False, False],
+     [False, False, True,  False, False],
+     [False, False, True,  False, False] ],
+   [ [False, False, True,  True,  True],   # { J }
+     [False, False, False, True,  False],
+     [False, False, False, True,  False],
+     [False, False, False, True,  False],
+     [True,  True,  True,  True,  False] ],
+   [ [True,  False, False, False, True],   # { K }
+     [True,  False, False, True,  False],
+     [True,  True,  True,  False, False],
+     [True,  False, False, True,  False],
+     [True,  False, False, False, True] ],
+   [ [True,  False, False, False, False],  # { L }
+     [True,  False, False, False, False],
+     [True,  False, False, False, False],
+     [True,  False, False, False, False],
+     [True,  True,  True,  True,  True] ],
+   [ [True,  True,  False, True,  True],   # { N }
+     [True,  False, True,  False, True],
+     [True,  False, False, False, True],
+     [True,  False, False, False, True],
+     [True,  False, False, False, True] ],
+   [ [True,  False, False, False, True],   # { M }
+     [True,  True,  False, False, True],
+     [True,  False, True,  False, True],
+     [True,  False, False, True,  True],
+     [True,  False, False, False, True] ],
+   [ [False, True,  True,  True,  False],  # { O }
+     [True,  False, False, False, True],
+     [True,  False, False, False, True],
+     [True,  False, False, False, True],
+     [False, True,  True,  True,  False] ],
+   [ [True,  True,  True,  True,  False],  # { P }
+     [True,  False, False, False, True],
+     [True,  True,  True,  True,  False],
+     [True,  False, False, False, False],
+     [True,  False, False, False, False] ],
+   [ [True,  True,  True,  True,  True],   # { Q }
+     [True,  False, False, False, True],
+     [True,  False, False, False, True],
+     [True,  False, False, True,  True],
+     [True,  True,  True,  True,  True] ],
+   [ [True,  True,  True,  True,  False],  # { R }
+     [True,  False, False, False, True],
+     [True,  True,  True,  True,  False],
+     [True,  False, False, True,  False],
+     [True,  False, False, False, True] ],
+   [ [False, True,  True,  True,  True],   # { S }
+     [True,  False, False, False, False],
+     [False, True,  True,  True,  False],
+     [False, False, False, False, True],
+     [True,  True,  True,  True,  False] ],
+   [ [True,  True,  True,  True,  True],   # { T }
+     [False, False, True,  False, False],
+     [False, False, True,  False, False],
+     [False, False, True,  False, False],
+     [False, False, True,  False, False] ],
+   [ [True,  False, False, False, True],   # { U }
+     [True,  False, False, False, True],
+     [True,  False, False, False, True],
+     [True,  False, False, False, True],
+     [False, True,  True,  True,  False] ],
+   [ [True,  False, False, False, True],   # { V }
+     [True,  False, False, False, True],
+     [True,  False, False, False, True],
+     [False, True,  False, True,  False],
+     [False, False, True,  False, False] ],
+   [ [True,  False, False, False, True],   # { W }
+     [True,  False, False, False, True],
+     [True,  False, False, False, True],
+     [True,  False, True,  False, True],
+     [False, True,  False, True,  False] ],
+   [ [True,  False, False, False, True],   # { X }
+     [False, True,  False, True,  False],
+     [False, False, True,  False, False],
+     [False, True,  False, True,  False],
+     [True,  False, False, False, True] ],
+   [ [True,  False, False, False, True],   # { Y }
+     [False, True,  False, True,  False],
+     [False, False, True,  False, False],
+     [False, False, True,  False, False],
+     [False, False, True,  False, False] ],
+   [ [True,  True,  True,  True,  True],   # { Z }
+     [False, False, False, True,  False],
+     [False, False, True,  False, False],
+     [False, True,  False, False, False],
+     [True,  True,  True,  True,  True] ] ]
+
+
+
+
