@@ -1,4 +1,4 @@
-J'ai été ammené à aider des étudiants en psychologie, spécialité cognition. Ces étudiants en difficulté ont eu des cours sur les réseaux de neurones réccurents.
+J'ai été ammené à aider des étudiants en psychologie, spécialité cognition. Ces étudiants en difficulté ont eu des cours sur les réseaux de neurones réccurrents.
 Je me suis approprié leur cours et j'ai pu réaliser leurs TP.
 Les plus important sont les suivants:
 
